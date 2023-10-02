@@ -20,9 +20,10 @@ def hybrid_search_weaviate(userSearchInput, inputAsVector):
         .with_hybrid(
             query=userSearchInput,
             vector=inputAsVector,
+            #properties=["title", "text^2"], -> boosting text by 2
             alpha=0.5,
         )
-        .with_limit(3)
+        .with_limit(10)
         .do()
     )
     return json.dumps(response, indent=2)
