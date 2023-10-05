@@ -1,7 +1,10 @@
 import weaviate
 import json
-from ..HuggingFace import huggingFace_service
+import requests
+#from ..HuggingFace import huggingFace_service
 from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 WEAVIATE_URL = getenv("WEAVIATE_DB_URL")
 WEAVIATE_API_KEY = getenv("WEAVIATE_API_KEY")
@@ -18,6 +21,7 @@ class_obj = {
     "vectorizer": "none", # We provide our own embeddings
 }
 
+#client.schema.delete_class("Article")
 #client.schema.create_class(class_obj)
 
 mock_file = open('news_mock.json') # mock data for testing
@@ -33,11 +37,11 @@ with client.batch as batch:
             "text": d["text"],
         }
         # generate vectors from Article's text
-        article_text_as_vectors = huggingFace_service.create_embeddings_from_search_input(d["text"])
+        #article_text_as_vectors = create_embeddings_from_search_input(d["text"])
         batch.add_data_object(
             data_object=properties,
             class_name="Article",
-            vector=article_text_as_vectors
+            #vector=article_text_as_vectors
         )
 
 mock_file.close()
