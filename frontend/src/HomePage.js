@@ -11,7 +11,7 @@ const HomePage = () => {
     const searchTerm = event.target.querySelector(".search-input").value;
     setLoading(true);
 
-    await fetch("http://127.0.0.1:5000/api/search", {
+    await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ searchInput: searchTerm }),

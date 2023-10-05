@@ -1,6 +1,8 @@
 import weaviate
 import json
+from dotenv import load_dotenv
 from os import getenv
+load_dotenv()
 
 WEAVIATE_URL = getenv("WEAVIATE_DB_URL")
 WEAVIATE_API_KEY = getenv("WEAVIATE_API_KEY")
@@ -21,7 +23,7 @@ def hybrid_search_weaviate(userSearchInput, inputAsVector):
             query=userSearchInput,
             vector=inputAsVector,
             #properties=["title", "text^2"], -> boosting text by 2
-            alpha=0.5,
+            alpha=0.75,
         )
         .with_limit(10)
         .do()

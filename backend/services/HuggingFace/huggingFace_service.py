@@ -1,5 +1,7 @@
 import requests
 from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 HUGGINGFACE_TOKEN = getenv("HUGGINGFACE_API_KEY")
 model_id = "sentence-transformers/all-MiniLM-L6-v2"
