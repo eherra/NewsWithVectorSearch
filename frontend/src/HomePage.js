@@ -32,7 +32,7 @@ const HomePage = () => {
         <span className="header-text">REALLY GOOD NEWS ONLY TODAY</span>
       </div>
       <form onSubmit={handleSearch} className="search-bar">
-        <input type="text" className="search-input" />
+        <input type="text" className="search-input" placeholder="Search with any text..." />
         <input type="submit" className="search-button" value="Search" />
       </form>
       <div className="results-container">
