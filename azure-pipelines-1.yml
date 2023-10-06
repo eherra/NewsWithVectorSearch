@@ -1,0 +1,51 @@
+# Docker
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'b890f04a-1046-4f40-b5fa-446fa01fdb25'
+  imageRepository: 'eherranewswithvectorsearch'
+  containerRegistry: 'vectorsearch.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+    - task: HelmInstaller@0
+      inputs:
+        helmVersion: '2.14.1'
+        installKubectl: true
+    - task: HelmDeploy@0
+      inputs:
+        command: 'package'
+        chartPath: 'helm'
+        chartVersion: '$(Build.BuildId)'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'vectorsearchapp'
+        publishLocation: 'pipeline'
+
