@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./HomePage.css";
 import LoadingIcon from "./LoadingIcon";
+import SearchTypeSelector from "./components/SearchTypeSelector";
 
 const HomePage = () => {
   const [news, setNews] = useState([]);
+  const [searchType, setSearchType] = useState("hybrid");
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (event) => {
@@ -11,20 +13,26 @@ const HomePage = () => {
     const searchTerm = event.target.querySelector(".search-input").value;
     setLoading(true);
 
-    await fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ searchInput: searchTerm }),
-    })
-      .then((res) => res.json())
-      .then((d) => {
-        const dataJson = JSON.parse(d);
-        setNews(dataJson.data.Get.Article);
-      });
-    setLoading(false);
+    try {
+      await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          searchInput: searchTerm,
+          searchType: searchType,
+        }),
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          const dataJson = JSON.parse(d);
+          setNews(dataJson.data.Get.Article);
+        });
+      setLoading(false);
+    } catch (error) {
+      console.log("Something went wrong with the API call.");      
+      setLoading(false);
+    }
   };
-
-  console.log(news)
 
   return (
     <div className="home-page">
@@ -32,7 +40,16 @@ const HomePage = () => {
         <span className="header-text">REALLY GOOD NEWS ONLY TODAY</span>
       </div>
       <form onSubmit={handleSearch} className="search-bar">
-        <input type="text" className="search-input" placeholder="Search with any text..." />
+        <input
+          required
+          type="text"
+          className="search-input"
+          placeholder="Search with any text..."
+        />
+        <SearchTypeSelector
+          defaultValue={searchType}
+          setSearchType={setSearchType}
+        />
         <input type="submit" className="search-button" value="Search" />
       </form>
       <div className="results-container">

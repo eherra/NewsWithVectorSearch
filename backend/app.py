@@ -11,6 +11,7 @@ app = Flask(
 )
 
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+search_types_as_dict = { "vector": 1.0, "hybrid": 0.5, "text": 0 }
 
 @app.route("/ping")
 def index():
@@ -26,6 +27,11 @@ def index_redir():
 def search():
     input = request.get_json()
     search_input = input["searchInput"]
+    alpha = get_alpha_value(input["searchType"])
     search_input_vectorized = huggingFace_service.create_embeddings_from_search_input(search_input)
-    data = weaviate_service.hybrid_search_weaviate(search_input, search_input_vectorized)
-    return jsonify(data)
+    weaviate_data = weaviate_service.search_weaviate(search_input, search_input_vectorized, alpha)
+    return jsonify(weaviate_data)
+
+
+def get_alpha_value(search_type): 
+    return search_types_as_dict[search_type]

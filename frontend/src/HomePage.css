@@ -102,3 +102,9 @@
   background-color: #ccc; /* Thumb color (the scrollbar handle) */
   border-radius: 0.25em; /* Rounded corners for the scrollbar handle */
 }
+
+.search-type {
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
