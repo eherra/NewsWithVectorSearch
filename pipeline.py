@@ -1,59 +1,41 @@
 import pandas as pd
 import os
-from pipeline.data_preparation import DataPreparation
-from pipeline.vectorizer import Vectorizer
+# pipeline.data_preparation import DataPreparation
 from pipeline.ingest import Ingest
+from pipeline.data_extraction import DataExtraction
+from pipeline.data_preparation import DataPreparation
+from pipeline.data_cleaning import DataCleaning  
 
 from dotenv import load_dotenv
-import weaviate
 load_dotenv()
 
-WEAVIATE_URL = os.getenv("WEAVIATE_DB_URL")
-WEAVIATE_API_KEY = os.getenv("WEAVIATE_API_KEY")
 
-auth_config = weaviate.AuthApiKey(api_key=WEAVIATE_API_KEY)
-
-client = weaviate.Client(
-    url=WEAVIATE_URL,
-    auth_client_secret=auth_config
-)
 
 class Pipeline:
-    def __init__(self, initial_csv_path):
-        self.data_path = initial_csv_path
+    def __init__(self):
         self.dp = DataPreparation()
-        self.vect = Vectorizer()
         self.ingest = Ingest()
+        self.extractor = DataExtraction()
+        self.cleaner = DataCleaning()
 
     def run(self):
+        # Step 0: Data Extraction
+        extracted_path = self.extractor.run("extracted_data.csv")
+
+        # Step 0.5: Data Cleaning
+        cleaned_path = "cleaned_data.csv"
+        self.cleaner.clean_csv(extracted_path, cleaned_path)
+
         # Step 1: Data Preparation
-        processed_data_path = self.dp.run(self.data_path, "path_for_processed_data.csv")
+        processed_data_path = self.dp.run(cleaned_path, output_path="path_for_processed_data.csv")
 
         # Read and process data
-
         df = pd.read_csv(processed_data_path)
 
-        df['text'] = df['title'] + " " + df['description']
-
-        # Fill NaN values in the 'text' column
-        df['text'].fillna("", inplace=True)
-
-        # Step 2: Vectorization
-        df['vector'] = list(self.vect.fit_transform(df['text']))
-
-
-        vectorized_data_path = "path_for_vectorized_data.csv"
-
-        df.to_csv(vectorized_data_path, index=False)
-    
-        print("Type: ", type(df['vector'].iloc[0])) 
-        print("First ones: ", df['vector'].head())
-
-        # Step 3: Ingestion
-        self.ingest.run(vectorized_data_path)
-
+        # Step 3: Ingestion and vectorize
+        self.ingest.run(df)
 
 
 if __name__ == "__main__":
-    pipeline = Pipeline('/PATH_TO_CSV.csv')
+    pipeline = Pipeline()
     pipeline.run()

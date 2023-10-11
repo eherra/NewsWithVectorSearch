@@ -1,7 +1,10 @@
 import weaviate
 import os
 import pandas as pd
+import numpy as np
 from dotenv import load_dotenv
+
+from pipeline.vector import TextVectorizer  # Assuming you have saved TextVectorizer class in vector.py
 
 load_dotenv()
 
@@ -16,23 +19,41 @@ client = weaviate.Client(
 )
 
 class Ingest:
-    def run(self, csv_path):
-        # Read the data from the given path
-        df = pd.read_csv(csv_path)
+    def __init__(self):
+        self.vectorizer = TextVectorizer()  # Initialize the TextVectorizer
 
-        # Ingestion to Weaviate
+    def run(self, df):
+
+        class_obj = {
+            "class": "Article",
+            "vectorizer": "none", # We provide our own embeddings
+        }
+        
+        # Step 1: Read and process data
+        df['text'] = df['title'] + " " + df['description']
+
+        # Fill NaN values in the 'text' column
+        df['text'].fillna("", inplace=True)
+
+        if df.isnull().values.any():
+            print("DataFrame contains NaN values!")
+
+        # Step 3: Ingestion
         client.batch.configure(batch_size=100)
         with client.batch as batch:
             for _, row in df.iterrows():
-                print("ROWI ", row['vector'])  # log the vector
-
+                vector = self.vectorizer.encode([row["text"]])[0]  # Using the vectorizer
+                vector = vector.numpy()  # Convert tensor to numpy array
                 properties = {
                     "author": row["author"],
                     "title": row["title"],
-                    "text": row["text"]
+                    "text": row["description"],
+                    "date": row["publishedAt"],
+                    "url": row["url"]
                 }
+                
                 batch.add_data_object(
                     data_object=properties,
                     class_name="Article",
-                    vector=row["vector"]
+                    vector=vector
                 )
