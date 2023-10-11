@@ -48,7 +48,7 @@ kitty = [1.5, -0.4, 7.2, 19.5, 3.2, ..., 20.8]
 
 ## How to run
 
-Fill <code>.envs</code> in backend folder. See the [.env.example](https://github.com/eherra/NewsWithVectorSearch/blob/main/backend/.env.example)
+Fill <code>.env</code> in backend folder. See the [.env.example](https://github.com/eherra/NewsWithVectorSearch/blob/main/backend/.env.example)
 
 Go to root folder and run:
 

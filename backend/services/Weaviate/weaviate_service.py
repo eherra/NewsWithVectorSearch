@@ -27,7 +27,7 @@ def search_weaviate(userSearchInput, inputAsVector, alpha):
     """
     response = (
         client.query
-        .get("Article", ["title", "text", "author"])
+        .get("Article", ["title", "text", "author", "url", "date"])
         .with_additional(["score"])
         .with_hybrid(
             query=userSearchInput,
