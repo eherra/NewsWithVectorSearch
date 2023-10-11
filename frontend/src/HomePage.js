@@ -5,7 +5,7 @@ import SearchTypeSelector from "./components/SearchTypeSelector";
 import { BiLinkExternal } from 'react-icons/bi';
 
 const HomePage = () => {
-  const [news, setNews] = useState();
+  const [news, setNews] = useState([]);
   const [searchType, setSearchType] = useState("hybrid");
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +67,7 @@ const HomePage = () => {
                 <span style={{ textDecoration: "underline" }}>
                   Relevancy score
                 </span>
-                <span className="pill">0.12312512312</span>
+                <span className="pill">{article._additional.score}</span>
               </div>
             </div>
             <div className="article-details">
