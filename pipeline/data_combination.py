@@ -60,7 +60,7 @@ def combine_files(json_files, csv_files):
     return combined_df
 
 # Define your path
-data_directory = '/home/richard/Documents/lipasto/NewsWithVectorSearch/data'  # replace with your actual path
+data_directory = '/data'  # replace with your actual path
 
 json_files = [os.path.join(data_directory, f) for f in os.listdir(data_directory) if f.endswith('.json')]
 csv_files = [os.path.join(data_directory, f) for f in os.listdir(data_directory) if f.endswith('.csv')]
