@@ -4,14 +4,15 @@ import json
 
 def load_json(file_path):
     with open(file_path, 'r') as file:
-
         data = [json.loads(line) for line in file]
         return pd.DataFrame(data)
-
 
 def load_csv(file_path):
     return pd.read_csv(file_path)
 
+def save_to_json(df, file_path):
+    df.to_json(file_path, orient='records', lines=True)
+    
 def combine_files(json_files, csv_files):
     df_list = []
 
@@ -36,7 +37,7 @@ def combine_files(json_files, csv_files):
         })
         df['source'] = 'Unknown'  
         df['urlToImage'] = None   
-        df['content'] = None      
+        df['content'] = df['description']  # Set content column to short_description 
         df_list.append(df)
 
         if total_rows >= max_rows:
@@ -58,10 +59,8 @@ def combine_files(json_files, csv_files):
     combined_df = pd.concat(df_list, ignore_index=True)
     return combined_df
 
-
-
 # Define your path
-data_directory = '/PATH_TO_DATA'  # replace with your actual path
+data_directory = '/home/richard/Documents/lipasto/NewsWithVectorSearch/data'  # replace with your actual path
 
 json_files = [os.path.join(data_directory, f) for f in os.listdir(data_directory) if f.endswith('.json')]
 csv_files = [os.path.join(data_directory, f) for f in os.listdir(data_directory) if f.endswith('.csv')]
@@ -72,3 +71,6 @@ final_df = combine_files(json_files, csv_files)
 print(final_df.head())
 print(final_df.shape)
 final_df.to_csv('combined_data.csv')
+output_json_path = 'combined_data.json'
+save_to_json(final_df, output_json_path)
+print(f"Data saved to {output_json_path}")
