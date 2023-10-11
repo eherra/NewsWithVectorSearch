@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import LoadingIcon from "./LoadingIcon";
 import SearchTypeSelector from "./components/SearchTypeSelector";
+import { BiLinkExternal } from 'react-icons/bi';
 
 const HomePage = () => {
-  const [news, setNews] = useState([]);
+  const [news, setNews] = useState();
   const [searchType, setSearchType] = useState("hybrid");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,7 @@ const HomePage = () => {
         });
       setLoading(false);
     } catch (error) {
-      console.log("Something went wrong with the API call.");      
+      console.log("Something went wrong with the API call.");
       setLoading(false);
     }
   };
@@ -55,16 +56,26 @@ const HomePage = () => {
       <div className="results-container">
         {news.map((article) => (
           <div className="news-article" key={article.id}>
-            <h2 className="news-title">
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                {article.title}
-              </a>
-            </h2>
-            <div className="article-content">
-              <p>{article.text}</p>
+            <div className="title-row">
+              <h2 className="news-title">
+                <a href={article.url} target="_blank" rel="noopener noreferrer">
+                  {article.title}
+                </a>
+                <BiLinkExternal style={{marginLeft: '2px'}} />
+              </h2>
+              <div className="relevancy-score">
+                <span style={{ textDecoration: "underline" }}>
+                  Relevancy score
+                </span>
+                <span className="pill">0.12312512312</span>
+              </div>
+            </div>
+            <div className="article-details">
+              <span>Author: {article.author}</span>
+              <span>Published: {article.date}</span>
             </div>
             <div className="article-content">
-              <p>Relevancy score: {article._additional.score}</p>
+              <p>{article.text}</p>
             </div>
           </div>
         ))}
