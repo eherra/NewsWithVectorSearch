@@ -22,7 +22,7 @@ class Pipeline:
 
 
     def run(self):
-        """
+        
         # Step 0: Data Extraction
         extracted_path = self.extractor.run("extracted_data.csv")
 
@@ -32,7 +32,7 @@ class Pipeline:
 
         # Step 1: Data Preparation
         processed_data_path = self.dp.run(cleaned_path, output_path="path_for_processed_data.csv")
-        """
+        
         # Read and process data
         df = pd.read_csv("/home/richard/Documents/lipasto/NewsWithVectorSearch/path_for_processed_data.csv")
 
