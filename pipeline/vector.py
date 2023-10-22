@@ -28,3 +28,24 @@ class TextVectorizer:
         return F.normalize(sentence_embeddings, p=2, dim=1)
 
 
+    def vectorize_texts(self, sentences):
+        # Tokenize sentences
+        encoded_input = self.tokenizer(
+            sentences, 
+            padding=True, 
+            truncation=True, 
+            return_tensors='pt',  # Requests the output to be in PyTorch tensors
+        )
+
+        # Compute token embeddings with the model
+        with torch.no_grad():
+            model_output = self.model(**encoded_input)
+
+        # Perform mean pooling on the token embeddings to get sentence embeddings
+        sentence_embeddings = self.mean_pooling(
+            model_output, 
+            encoded_input['attention_mask']
+        )
+
+        # Normalize embeddings for use in similarity calculations
+        return F.normalize(sentence_embeddings, p=2, dim=1)
