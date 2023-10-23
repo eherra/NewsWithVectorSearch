@@ -25,10 +25,9 @@ With vectors you can have [lightning-fast querying](https://weaviate.io/blog/why
 
 Example of the vectors:
 
-<code>
-cat = [1.5, -0.4, 7.2, 19.6, 3.1, ..., 20.2] \
-kitty = [1.5, -0.4, 7.2, 19.5, 3.2, ..., 20.8]
-</code>
+<code>cat = [1.5, -0.4, 7.2, 19.6, 3.1, ..., 20.2]</code>
+
+<code>kitty = [1.5, -0.4, 7.2, 19.5, 3.2, ..., 20.8]</code>
 
 <img src="https://github.com/eherra/NewsWithVectorSearch/blob/main/docs/howVectorsWork.png" width="80%" heigth="80%">
 
