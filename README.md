@@ -9,12 +9,13 @@
 
 ## What
 
-PoC application to show vector/hybrid search approaches for semantic information retrieval/relevance engineering purposes. 
+PoC application to show vector/hybrid/keyword search approaches for semantic information retrieval/relevance engineering purposes. 
 
 The PoC includes data pipeline which fetches news articles from API, processes the data (e.g. vectorizing) and then storing the articles to vector database (Weaviate).
 
-We have created an simple UI to try out the searches with any text input. You can find the app hosted here: \
-<a>link to the app</a>
+We have created an simple UI to try out the searches with any text input.
+
+<img src="https://github.com/eherra/NewsWithVectorSearch/blob/main/docs/app.png" width="80%" heigth="80%">
 
 ## Why Vectors?
 
@@ -22,7 +23,8 @@ With vectors you can have [lightning-fast querying](https://weaviate.io/blog/why
 
 > "Vectors are numeric representations of data that capture certain features of the data. For example, in the case of text data, “cat” and “kitty” have similar meaning, even though the words “cat” and “kitty” are very different if compared letter by letter. For semantic search to work effectively, representations of “cat” and “kitty” must sufficiently capture their semantic similarity. This is where vector representations are used, and why their derivation is so important." [Vector Embeddings Explained](https://weaviate.io/blog/vector-embeddings-explained#what-exactly-are-vector-embeddings)
 
-Example of the vectors: \
+Example of the vectors:
+
 <code>
 cat = [1.5, -0.4, 7.2, 19.6, 3.1, ..., 20.2] \
 kitty = [1.5, -0.4, 7.2, 19.5, 3.2, ..., 20.8]
@@ -39,7 +41,7 @@ kitty = [1.5, -0.4, 7.2, 19.5, 3.2, ..., 20.8]
 - Backend: 
     - Python
 - Data pipeline:
-    - Python (Pandas, NLTK)
+    - Python (Pandas, NLTK, NumPy)
 - Frontend:
     - React
 - Vector database:
